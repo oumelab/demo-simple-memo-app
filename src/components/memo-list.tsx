@@ -10,12 +10,14 @@ export default function MemoList({
   addReply,
   deleteMemo,
   deleteReply,
+  borderStyle,
 }: {
   memos: Memo[];
   replys: Reply[];
   addReply: (content: string, parentId: number) => void;
   deleteMemo: (id: number) => void;
   deleteReply: (id: number) => void;
+  borderStyle?: boolean;
 }) {
   const [replyForms, setReplyForms] = useState<number[]>([]);
 
@@ -119,6 +121,7 @@ export default function MemoList({
                 replyForms={replyForms}
                 placeholder="リプライを入力..."
                 initialValue=""
+                borderStyle={borderStyle}
               />
             </div>
           )}

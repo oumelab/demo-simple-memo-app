@@ -20,6 +20,7 @@ const initialReply: Reply = {
 export default function App() {
   const [memos, setMemos] = useState<Memo[]>([initialMemo]);
   const [replys, setReplys] = useState<Reply[] | null>([initialReply]);
+  const borderStyle: boolean = true;
 
   const addMemo = (inputText: string) => {
     if (inputText.trim()) {
@@ -61,7 +62,7 @@ export default function App() {
   return (
     <Layout>
       <Form placeholder="新しいメモを入力..." addMemo={addMemo} initialValue="" />
-      <MemoList memos={memos} replys={replys ?? []} addReply={addReply} deleteMemo={deleteMemo} deleteReply={deleteReply} />
+      <MemoList memos={memos} replys={replys ?? []} addReply={addReply} deleteMemo={deleteMemo} deleteReply={deleteReply} borderStyle={borderStyle} />
     </Layout>
   );
 }

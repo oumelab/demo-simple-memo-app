@@ -8,10 +8,14 @@ export default function MemoList({
   memos,
   replys,
   addReply,
+  deleteMemo,
+  deleteReply,
 }: {
   memos: Memo[];
   replys: Reply[];
   addReply: (content: string, parentId: number) => void;
+  deleteMemo: (id: number) => void;
+  deleteReply: (id: number) => void;
 }) {
   const [replyForms, setReplyForms] = useState<number[]>([]);
 
@@ -41,6 +45,7 @@ export default function MemoList({
                 size="icon"
                 variant="ghost"
                 className="text-red-500 cursor-pointer"
+                onClick={() => deleteMemo(memo.id)}
               >
                 <Trash2 />
                 <span className="sr-only">Delete</span>
@@ -68,6 +73,7 @@ export default function MemoList({
                     size="icon"
                     variant="ghost"
                     className="text-red-500 cursor-pointer hover:bg-white"
+                    onClick={() => deleteReply(reply.id)}
                   >
                     <Trash2 />
                     <span className="sr-only">Delete</span>

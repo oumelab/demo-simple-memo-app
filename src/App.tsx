@@ -44,10 +44,24 @@ export default function App() {
       setReplys(newReplys);
     }
   };
+
+  const deleteMemo = (id: number) => {
+    if (replys) {
+      const newReplys = replys.filter((reply) => reply.parentId !== id);
+      setReplys(newReplys);
+    }
+    const newMemos = memos.filter((memo) => memo.id !== id);
+    setMemos(newMemos);
+  };
+  const deleteReply = (id: number) => {
+    const newReplys = replys?.filter((reply) => reply.id !== id);
+    setReplys(newReplys ?? []);
+  };
+
   return (
     <Layout>
       <Form placeholder="新しいメモを入力..." addMemo={addMemo} initialValue="" />
-      <MemoList memos={memos} replys={replys ?? []} addReply={addReply} />
+      <MemoList memos={memos} replys={replys ?? []} addReply={addReply} deleteMemo={deleteMemo} deleteReply={deleteReply} />
     </Layout>
   );
 }

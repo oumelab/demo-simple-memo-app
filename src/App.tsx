@@ -1,6 +1,7 @@
 import Form from "./components/form";
 import Layout from "./components/layout";
-import {Memo} from "./types";
+import MemoList from "./components/memo-list";
+import {Memo, Reply} from "./types";
 import {useState} from "react";
 
 const initialMemo: Memo = {
@@ -9,8 +10,16 @@ const initialMemo: Memo = {
   timestamp: new Date().toLocaleString("ja-JP"),
 };
 
+const initialReply: Reply = {
+  id: Date.now(),
+  content: "このメモアプリは、ReactとTailwind CSSを使って作られています。このようにリプライをつけることもできます。",
+  timestamp: new Date().toLocaleString("ja-JP"),
+  parentId: initialMemo.id,
+};
+
 export default function App() {
   const [memos, setMemos] = useState<Memo[]>([initialMemo]);
+  const [replys, setReplys] = useState<Reply[] | null>([initialReply]);
 
   const addMemo = (inputText: string) => {
     if (inputText.trim()) {
@@ -23,15 +32,22 @@ export default function App() {
     }
   };
 
+  const addReply = (inputText: string, parentId: number) => {
+    if (inputText.trim()) {
+      const reply: Reply = {
+        id: Date.now(),
+        content: inputText,
+        timestamp: new Date().toLocaleString("ja-JP"),
+        parentId: parentId,
+      };
+      const newReplys = replys ? [...replys, reply] : [reply];
+      setReplys(newReplys);
+    }
+  };
   return (
     <Layout>
-      <Form placeholder="新しいメモを入力..." onSubmit={addMemo} />
-      {memos.map((memo) => (
-        <div key={memo.id}>
-          <p>{memo.content}</p>
-          <p>{memo.timestamp}</p>
-        </div>
-      ))}
+      <Form placeholder="新しいメモを入力..." addMemo={addMemo} initialValue="" />
+      <MemoList memos={memos} replys={replys ?? []} addReply={addReply} />
     </Layout>
   );
 }

@@ -11,6 +11,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import {Button} from "@/components/ui/button";
 import {Trash2} from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 type DeleteAlertProps =
   | {
@@ -39,16 +45,25 @@ export default function DeleteAlert({
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-red-500 cursor-pointer"
-        >
-          <Trash2 />
-          <span className="sr-only">削除</span>
-        </Button>
-      </AlertDialogTrigger>
+      <TooltipProvider>
+        <Tooltip delayDuration={800} disableHoverableContent>
+          <TooltipTrigger asChild>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-red-500 cursor-pointer"
+              >
+                <Trash2 />
+                <span className="sr-only">削除</span>
+              </Button>
+            </AlertDialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>削除</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>削除しますか？</AlertDialogTitle>
@@ -57,7 +72,9 @@ export default function DeleteAlert({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="cursor-pointer">キャンセル</AlertDialogCancel>
+          <AlertDialogCancel className="cursor-pointer">
+            キャンセル
+          </AlertDialogCancel>
 
           {mode === "memo" && (
             <AlertDialogAction asChild>

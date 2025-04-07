@@ -9,8 +9,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {Button} from "@/components/ui/button";
-import {Trash2} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import clsx from "clsx";
+import { Trash2 } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -46,13 +47,15 @@ export default function DeleteAlert({
   return (
     <AlertDialog>
       <TooltipProvider>
-        <Tooltip delayDuration={800} disableHoverableContent>
+        <Tooltip delayDuration={800}>
           <TooltipTrigger asChild>
             <AlertDialogTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-red-500 cursor-pointer"
+                className={clsx("text-red-500 cursor-pointer", {
+                  "hover:bg-white": mode === "reply",
+                })}
               >
                 <Trash2 />
                 <span className="sr-only">削除</span>

@@ -6,13 +6,15 @@ import {useState} from "react";
 
 const initialMemo: Memo = {
   id: Date.now(),
-  content: "思いついたことを、サッとメモ。\n作業に集中するための、シンプルなメモアプリです！",
+  content:
+    "思いついたことを、サッとメモ。\n作業に集中するための、シンプルなメモアプリです！",
   timestamp: new Date().toLocaleString("ja-JP"),
 };
 
 const initialReply: Reply = {
   id: Date.now(),
-  content: "このメモアプリは、ReactとTailwind CSSを使って作られています。このようにリプライをつけることもできます。",
+  content:
+    "このメモアプリは、ReactとTailwind CSSを使って作られています。\nこのようにリプライをつけることもできます。",
   timestamp: new Date().toLocaleString("ja-JP"),
   parentId: initialMemo.id,
 };
@@ -59,10 +61,37 @@ export default function App() {
     setReplys(newReplys ?? []);
   };
 
+  const updateMemo = (id: number, content: string) => {
+    const newMemos = memos.map((memo) =>
+      memo.id === id ? {...memo, content} : memo
+    );
+    setMemos(newMemos);
+  };
+
+  const updateReply = (id: number, content: string) => {
+    const newReplys = replys?.map((reply) =>
+      reply.id === id ? {...reply, content} : reply
+    );
+    setReplys(newReplys ?? []);
+  };
+
   return (
     <Layout>
-      <Form placeholder="新しいメモを入力..." addMemo={addMemo} initialValue="" />
-      <MemoList memos={memos} replys={replys ?? []} addReply={addReply} deleteMemo={deleteMemo} deleteReply={deleteReply} borderStyle={borderStyle} />
+      <Form
+        placeholder="新しいメモを入力..."
+        addMemo={addMemo}
+        initialValue=""
+      />
+      <MemoList
+        memos={memos}
+        replys={replys ?? []}
+        addReply={addReply}
+        deleteMemo={deleteMemo}
+        deleteReply={deleteReply}
+        updateMemo={updateMemo}
+        updateReply={updateReply}
+        borderStyle={borderStyle}
+      />
     </Layout>
   );
 }

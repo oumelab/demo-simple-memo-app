@@ -25,6 +25,7 @@ type FormProps = {
 export default function Form(props: FormProps) {
   const {initialValue = "", placeholder = ""} = props;
   const [inputText, setInputText] = useState(initialValue);
+  const buttonStyle = "w-24 bg-emerald-600 text-white cursor-pointer";
 
   return (
     <div>
@@ -46,7 +47,7 @@ export default function Form(props: FormProps) {
             );
             setInputText("");
           }}
-          className="w-24 bg-emerald-600 text-white"
+          className={buttonStyle}
         >
           <Send />
         </Button>
@@ -57,7 +58,7 @@ export default function Form(props: FormProps) {
             props.addMemo?.(inputText);
             setInputText("");
           }}
-          className="w-24 bg-emerald-600 text-white"
+          className={buttonStyle}
         >
           <Send />
         </Button>
@@ -71,7 +72,7 @@ export default function Form(props: FormProps) {
             props.setOnEditMemoIds?.(newOnEditMemoIds);
             setInputText("");
           }}
-          className="w-24 bg-emerald-600 text-white"
+          className={buttonStyle}
         >
           <Send />
         </Button>
@@ -85,20 +86,11 @@ export default function Form(props: FormProps) {
           props.setOnEditReplyIds?.(newOnEditReplyIds);
           setInputText("");
         }}
-        className="w-24 bg-emerald-600 text-white"
+        className={buttonStyle}
         >
           <Send />
         </Button>
       )}
-      {/* <Button
-        onClick={() => {
-          props.addMemo?.(inputText);
-          setInputText("");
-        }}
-        className="w-24 bg-emerald-600 text-white"
-      >
-        <Send />
-      </Button> */}
     </div>
   );
 }

@@ -1,9 +1,10 @@
-import {Memo, Reply} from "@/types";
-import {MessageCircle, Pen, Trash2, X} from "lucide-react";
-import {Button} from "./ui/button";
+import { Memo, Reply } from "@/types";
+import { MessageCircle, Pen, X } from "lucide-react";
+import { useState } from "react";
+import DeleteAlert from "./delete-alert";
 import Form from "./form";
-import {useState} from "react";
 import ReplyList from "./reply-list";
+import { Button } from "./ui/button";
 
 type MemoListProps = {
   memos: Memo[];
@@ -45,15 +46,11 @@ export default function MemoList({
             <p>{memo.timestamp}</p>
             <p className="flex items-center">
               {!onEditMemoIds.includes(memo.id) && (
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="text-red-500 cursor-pointer"
-                  onClick={() => deleteMemo(memo.id)}
-                >
-                  <Trash2 />
-                  <span className="sr-only">Delete</span>
-                </Button>
+                <DeleteAlert
+                  mode="memo"
+                  memoId={memo.id}
+                  handleDeleteMemo={() => deleteMemo(memo.id)}
+                 />
               )}
               <Button
                 size="icon"

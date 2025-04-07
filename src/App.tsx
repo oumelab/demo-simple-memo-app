@@ -62,17 +62,21 @@ export default function App() {
   };
 
   const updateMemo = (id: number, content: string) => {
-    const newMemos = memos.map((memo) =>
-      memo.id === id ? {...memo, content} : memo
-    );
-    setMemos(newMemos);
+    if (content.trim()) {
+      const newMemos = memos.map((memo) =>
+        memo.id === id ? {...memo, content} : memo
+      );
+      setMemos(newMemos);
+    }
   };
 
   const updateReply = (id: number, content: string) => {
-    const newReplys = replys?.map((reply) =>
-      reply.id === id ? {...reply, content} : reply
-    );
-    setReplys(newReplys ?? []);
+    if (content.trim()) {
+      const newReplys = replys?.map((reply) =>
+        reply.id === id ? {...reply, content} : reply
+      );
+      setReplys(newReplys ?? []);
+    }
   };
 
   return (

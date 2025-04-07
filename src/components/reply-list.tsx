@@ -1,7 +1,8 @@
-import {Reply} from "@/types";
-import {Button} from "./ui/button";
-import {Trash2, X, Pen} from "lucide-react";
+import { Reply } from "@/types";
+import { Pen, X } from "lucide-react";
+import DeleteAlert from "./delete-alert";
 import Form from "./form";
+import { Button } from "./ui/button";
 type ReplyListProps = {
   reply: Reply;
   deleteReply: (id: number) => void;
@@ -28,15 +29,11 @@ export default function ReplyList({
         <p>{reply.timestamp}</p>
         <p className="flex items-center">
           {!onEditReplyIds.includes(reply.id) && (
-            <Button
-              size="icon"
-              variant="ghost"
-              className="text-red-500 cursor-pointer hover:bg-white"
-              onClick={() => deleteReply(reply.id)}
-            >
-              <Trash2 />
-              <span className="sr-only">Delete</span>
-            </Button>
+            <DeleteAlert
+            mode="reply"
+            replyId={reply.id}
+            handleDeleteReply={deleteReply}
+            />
           )}
           <Button
             size="icon"

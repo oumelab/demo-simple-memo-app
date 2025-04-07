@@ -16,7 +16,6 @@ export default function ReplyList({
   reply,
   deleteReply,
   updateReply,
-  borderStyle,
   onEditReplyIds,
   setOnEditReplyIds,
 }: ReplyListProps) {
@@ -66,12 +65,13 @@ export default function ReplyList({
       <div className="mt-5">
         {onEditReplyIds.includes(reply.id) ? (
           <Form
+            mode = "editReply"
             initialValue={reply.content}
             replyId={reply.id}
             updateReply={updateReply}
             onEditReplyIds={onEditReplyIds}
             setOnEditReplyIds={setOnEditReplyIds}
-            borderStyle={borderStyle}
+            borderStyle
           />
         ) : (
           <>{reply.content}</>

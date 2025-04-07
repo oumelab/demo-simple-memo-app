@@ -25,7 +25,6 @@ export default function MemoList({
   deleteReply,
   updateMemo,
   updateReply,
-  borderStyle,
 }: MemoListProps) {
   const [onReplyIds, setOnReplyIds] = useState<number[]>([]);
   const [onEditMemoIds, setOnEditMemoIds] = useState<number[]>([]);
@@ -74,12 +73,13 @@ export default function MemoList({
           <div className="py-5 border-b">
             {onEditMemoIds.includes(memo.id) ? (
               <Form
+                mode="editMemo"
                 initialValue={memo.content}
                 memoId={memo.id}
                 updateMemo={updateMemo}
                 onEditMemoIds={onEditMemoIds}
                 setOnEditMemoIds={setOnEditMemoIds}
-                borderStyle={borderStyle}
+                borderStyle
               />
             ) : (
               <>{memo.content}</>
@@ -126,17 +126,19 @@ export default function MemoList({
           {onReplyIds.includes(memo.id) && (
             <div className="my-4 ml-auto w-[calc(100%-2.5rem)]">
               <Form
+                mode="reply"
                 addReply={addReply}
                 parentId={memo.id}
                 onReplyIds={onReplyIds}
+                setOnReplyIds={setOnReplyIds}
                 placeholder="リプライを入力..."
                 initialValue=""
-                borderStyle={borderStyle}
+                borderStyle
               />
             </div>
           )}
         </div>
-      ))}{" "}
+      ))}
     </div>
   );
 }

@@ -82,6 +82,7 @@ export default function App() {
   return (
     <Layout>
       <Form
+        mode="memo"
         placeholder="新しいメモを入力..."
         addMemo={addMemo}
         initialValue=""

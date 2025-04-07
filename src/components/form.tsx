@@ -115,7 +115,7 @@ export default function Form({
     <div>
       <Textarea
         value={inputText}
-        ref={mode === "memo" ? formRef : undefined}
+        ref={formRef}
         onChange={(e) => setInputText(e.target.value)}
         placeholder={placeholder}
         className={clsx("max-w-lg h-32 bg-white mb-4 border-0 shadow-lg", {

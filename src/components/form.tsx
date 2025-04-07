@@ -119,7 +119,7 @@ export default function Form({
         onChange={(e) => setInputText(e.target.value)}
         placeholder={placeholder}
         className={clsx("max-w-lg h-32 bg-white mb-4 border-0 shadow-lg", {
-          border: borderStyle,
+          "border shadow-none": borderStyle,
         })}
         />
         {mode === "memo" && (

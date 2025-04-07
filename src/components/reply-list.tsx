@@ -62,7 +62,7 @@ export default function ReplyList({
           </Button>
         </p>
       </div>
-      <div className="mt-5">
+      <div className="mt-5 whitespace-pre-wrap">
         {onEditReplyIds.includes(reply.id) ? (
           <Form
             mode = "editReply"

@@ -70,7 +70,7 @@ export default function MemoList({
               </Button>
             </p>
           </div>
-          <div className="py-5 border-b">
+          <div className="py-5 border-b whitespace-pre-wrap">
             {onEditMemoIds.includes(memo.id) ? (
               <Form
                 mode="editMemo"

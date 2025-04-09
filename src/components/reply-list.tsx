@@ -12,88 +12,97 @@ import {
 
 type ReplyListProps = {
   reply: Reply;
-  deleteReply: (id: number) => void;
-  updateReply: (id: number, content: string) => void;
+  deleteContent: (id: number, type: "memo" | "reply") => void;
+  updateContent: (id: number, content: string, type: "memo" | "reply") => void;
   borderStyle?: boolean;
-  onEditReplyIds: number[];
-  setOnEditReplyIds: React.Dispatch<React.SetStateAction<number[]>>;
+  onReplyId: number | null;
+  onEditId: {id: number; type: "memo" | "reply"} | null;
+  setOnEditId: React.Dispatch<
+    React.SetStateAction<{id: number; type: "memo" | "reply"} | null>
+  >;
 };
 
 export default function ReplyList({
   reply,
-  deleteReply,
-  updateReply,
-  onEditReplyIds,
-  setOnEditReplyIds,
+  deleteContent,
+  updateContent,
+  onReplyId,
+  onEditId,
+  setOnEditId,
 }: ReplyListProps) {
   return (
     <div
       key={reply.id}
-      className="w-[calc(100%-2.5rem)] ml-auto mt-5 rounded-md bg-muted pt-4 pb-5 px-5"
+      className="w-[calc(100%-2.5rem)] ml-auto mt-6 rounded-md bg-muted pt-3 pb-6 px-5"
     >
       <div className="text-muted-foreground flex justify-between items-center">
-        <p>{reply.timestamp}</p>
-        <div className="flex items-center">
-          {!onEditReplyIds.includes(reply.id) && (
+        {!(onEditId?.type === "reply" && onEditId.id === reply.id) && (
+          <p>{reply.timestamp}</p>
+        )}
+        {!onEditId && !onReplyId && (
+          <div className="flex items-center">
             <DeleteAlert
-              mode="reply"
               replyId={reply.id}
-              handleDeleteReply={deleteReply}
+              handleDeleteContent={deleteContent}
             />
-          )}
-          <TooltipProvider>
-            <Tooltip delayDuration={800} disableHoverableContent>
-              <TooltipTrigger asChild>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="py-0 text-emerald-500 cursor-pointer hover:bg-white"
-                  onClick={() => {
-                    if (onEditReplyIds.includes(reply.id)) {
-                      const newOnEditReplyIds = onEditReplyIds.filter(
-                        (formId) => formId !== reply.id
-                      );
-                      setOnEditReplyIds(newOnEditReplyIds);
-                    } else {
-                      setOnEditReplyIds([...onEditReplyIds, reply.id]);
-                    }
-                  }}
-                >
-                  {onEditReplyIds.includes(reply.id) ? (
-                    <>
-                      <X />
-                      <span className="sr-only">キャンセル</span>
-                    </>
-                  ) : (
-                    <>
-                      <Pen />
-                      <span className="sr-only">編集</span>
-                    </>
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                {onEditReplyIds.includes(reply.id) ? "キャンセル" : "編集"}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      </div>
-      <div className="mt-5 whitespace-pre-wrap">
-        {onEditReplyIds.includes(reply.id) ? (
-          <Form
-            mode="editReply"
-            initialValue={reply.content}
-            replyId={reply.id}
-            updateReply={updateReply}
-            onEditReplyIds={onEditReplyIds}
-            setOnEditReplyIds={setOnEditReplyIds}
-            borderStyle
-          />
-        ) : (
-          <>{reply.content}</>
+            <TooltipProvider>
+              <Tooltip delayDuration={800} disableHoverableContent>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="py-0 text-emerald-500 cursor-pointer hover:bg-white"
+                    onClick={() => {
+                      setOnEditId({id: reply.id, type: "reply"});
+                    }}
+                  >
+                    <Pen />
+                    <span className="sr-only">編集</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>編集</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         )}
       </div>
+      {onEditId?.type === "reply" && onEditId?.id === reply.id ? (
+        <div className="mt-3 flex gap-3">
+          <Form
+            mode="edit"
+            initialValue={reply.content}
+            replyId={reply.id}
+            updateContent={updateContent}
+            onEditId={onEditId}
+            setOnEditId={setOnEditId}
+            borderStyle
+          />
+          <div>
+            <TooltipProvider>
+              <Tooltip delayDuration={800} disableHoverableContent>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="py-0 text-emerald-500 cursor-pointer hover:bg-white"
+                    onClick={() => {
+                      setOnEditId(null);
+                    }}
+                  >
+                    <X />
+                    <span className="sr-only">キャンセル</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  キャンセル
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-3 whitespace-pre-wrap">{reply.content} </div>
+      )}
     </div>
   );
 }

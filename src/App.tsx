@@ -14,87 +14,87 @@ const initialMemo: Memo = {
 const initialReply: Reply = {
   id: Date.now(),
   content:
-    "このメモアプリは、ReactとTailwind CSSを使って作られています。\nこのようにリプライをつけることもできます。",
+    "このようにリプライをつけることもできます。",
   timestamp: new Date().toLocaleString("ja-JP"),
   parentId: initialMemo.id,
 };
 
 export default function App() {
   const [memos, setMemos] = useState<Memo[]>([initialMemo]);
-  const [replys, setReplys] = useState<Reply[] | null>([initialReply]);
+  const [replys, setReplys] = useState<Reply[]>([initialReply]);
   const borderStyle: boolean = true;
 
-  const addMemo = (inputText: string) => {
+  const addContent = (inputText: string, parentId?: number) => {
     if (inputText.trim()) {
-      const memo: Memo = {
-        id: Date.now(),
-        content: inputText,
-        timestamp: new Date().toLocaleString("ja-JP"),
-      };
-      setMemos([memo, ...memos]);
+      if (parentId) {
+        const reply: Reply = {
+          id: Date.now(),
+          content: inputText,
+          timestamp: new Date().toLocaleString("ja-JP"),
+          parentId: parentId,
+        };
+        const newReplys = replys ? [...replys, reply] : [reply];
+        setReplys(newReplys);
+      } else {
+        const memo: Memo = {
+          id: Date.now(),
+          content: inputText,
+          timestamp: new Date().toLocaleString("ja-JP"),
+        };
+        const newMemos = [memo, ...memos];
+        setMemos(newMemos);
+      }
     }
   };
 
-  const addReply = (inputText: string, parentId: number) => {
-    if (inputText.trim()) {
-      const reply: Reply = {
-        id: Date.now(),
-        content: inputText,
-        timestamp: new Date().toLocaleString("ja-JP"),
-        parentId: parentId,
-      };
-      const newReplys = replys ? [...replys, reply] : [reply];
-      setReplys(newReplys);
-    }
-  };
-
-  const deleteMemo = (id: number) => {
-    if (replys) {
-      const newReplys = replys.filter((reply) => reply.parentId !== id);
-      setReplys(newReplys);
-    }
-    const newMemos = memos.filter((memo) => memo.id !== id);
-    setMemos(newMemos);
-  };
-  const deleteReply = (id: number) => {
-    const newReplys = replys?.filter((reply) => reply.id !== id);
-    setReplys(newReplys ?? []);
-  };
-
-  const updateMemo = (id: number, content: string) => {
-    if (content.trim()) {
-      const newMemos = memos.map((memo) =>
-        memo.id === id ? {...memo, content} : memo
-      );
+  const deleteContent = (id: number, type: "memo" | "reply") => {
+    if (type === "memo") {
+      const newMemos = memos.filter((memo) => memo.id !== id);
+      if (replys) {
+        const newReplys = replys.filter((reply) => reply.parentId !== id);
+        setReplys(newReplys);
+      }
       setMemos(newMemos);
+    } else if (type === "reply") {
+      const newReplys = replys.filter((reply) => reply.id !== id);
+      setReplys(newReplys);
     }
   };
 
-  const updateReply = (id: number, content: string) => {
+  const updateContent = (
+    id: number,
+    content: string,
+    type: "memo" | "reply"
+  ) => {
     if (content.trim()) {
-      const newReplys = replys?.map((reply) =>
-        reply.id === id ? {...reply, content} : reply
-      );
-      setReplys(newReplys ?? []);
+      if (type === "memo") {
+        const newMemos = memos.map((memo) =>
+          memo.id === id ? {...memo, content} : memo
+        );
+        setMemos(newMemos);
+      } else if (type === "reply") {
+        const newReplys = replys?.map((reply) =>
+          reply.id === id ? {...reply, content} : reply
+        );
+        setReplys(newReplys ?? []);
+      }
     }
   };
 
   return (
     <Layout>
       <Form
-        mode="memo"
+        mode="add"
         placeholder="新しいメモを入力..."
-        addMemo={addMemo}
+        addContent={addContent}
         initialValue=""
       />
       <MemoList
         memos={memos}
         replys={replys ?? []}
-        addReply={addReply}
-        deleteMemo={deleteMemo}
-        deleteReply={deleteReply}
-        updateMemo={updateMemo}
-        updateReply={updateReply}
+        addContent={addContent}
+        deleteContent={deleteContent}
+        updateContent={updateContent}
         borderStyle={borderStyle}
       />
     </Layout>

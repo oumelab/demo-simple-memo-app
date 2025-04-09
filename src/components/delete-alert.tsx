@@ -9,9 +9,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import {Button} from "@/components/ui/button";
 import clsx from "clsx";
-import { Trash2 } from "lucide-react";
+import {Trash2} from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -19,30 +19,16 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 
-type DeleteAlertProps =
-  | {
-      mode: "memo";
-      memoId: number;
-      handleDeleteMemo: (id: number) => void;
-      handleDeleteReply?: undefined;
-      replyId?: undefined;
-    }
-  | {
-      mode: "reply";
-      replyId: number;
-      handleDeleteReply: (id: number) => void;
-      handleDeleteMemo?: undefined;
-      memoId?: undefined;
-    };
-
+type DeleteAlertProps = {
+  memoId?: number;
+  replyId?: number;
+  handleDeleteContent: (id: number, type: "memo" | "reply") => void;
+};
 export default function DeleteAlert({
-  mode,
-  handleDeleteMemo,
-  handleDeleteReply,
   memoId,
   replyId,
+  handleDeleteContent,
 }: DeleteAlertProps) {
-  const actionButtonStyle = "bg-emerald-600 text-white cursor-pointer";
 
   return (
     <AlertDialog>
@@ -54,7 +40,7 @@ export default function DeleteAlert({
                 variant="ghost"
                 size="icon"
                 className={clsx("text-red-500 cursor-pointer", {
-                  "hover:bg-white": mode === "reply",
+                  "hover:bg-white": replyId && "reply",
                 })}
               >
                 <Trash2 />
@@ -78,31 +64,17 @@ export default function DeleteAlert({
           <AlertDialogCancel className="cursor-pointer">
             キャンセル
           </AlertDialogCancel>
-
-          {mode === "memo" && (
-            <AlertDialogAction asChild>
-              <Button
-                className={actionButtonStyle}
-                onClick={() => {
-                  handleDeleteMemo(memoId);
-                }}
-              >
-                削除する
-              </Button>
-            </AlertDialogAction>
-          )}
-          {mode === "reply" && (
-            <AlertDialogAction asChild>
-              <Button
-                className={actionButtonStyle}
-                onClick={() => {
-                  handleDeleteReply(replyId);
-                }}
-              >
-                削除する
-              </Button>
-            </AlertDialogAction>
-          )}
+          <AlertDialogAction asChild>
+            <Button
+              className="bg-emerald-600 text-white cursor-pointer"
+              onClick={() => {
+                const type = memoId ? "memo" : "reply";
+                handleDeleteContent(memoId ?? replyId ?? 0, type);
+              }}
+            >
+              削除する
+            </Button>
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

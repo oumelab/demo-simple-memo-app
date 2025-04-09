@@ -6,100 +6,48 @@ import clsx from "clsx";
 
 type FormProps =
   | {
-      mode: "memo",
+      mode: "add",
       initialValue: string;
       placeholder: string;
-      addMemo: (content: string) => void;
-      addReply?: undefined;
-      updateMemo?: undefined;
-      updateReply?: undefined;
-      borderStyle?: undefined;
+      addContent: (content: string, parentId?: number) => void;
+      parentId?: number;
+      onReplyId?: number;
+      setOnReplyId?: React.Dispatch<React.SetStateAction<number | null>>;
+      borderStyle?: boolean;
+      updateContent?: undefined;
       memoId?: undefined;
       replyId?: undefined;
-      parentId?: undefined;
-      onReplyIds?: undefined;
-      setOnReplyIds?: undefined;
-      onEditMemoIds?: undefined;
-      onEditReplyIds?: undefined;
-      setOnEditMemoIds?: undefined;
-      setOnEditReplyIds?: undefined;
+      onEditId?: {id: number, type: "memo" | "reply"} | null;
+      setOnEditId?: undefined;
   }
   | {
-      mode: "reply",
+      mode: "edit";
       initialValue: string;
-      placeholder: string;
-      addReply: (content: string, parentId: number) => void;
-      parentId: number;
-      onReplyIds: number[];
-      setOnReplyIds: React.Dispatch<React.SetStateAction<number[]>>;
-      borderStyle: boolean;
-      addMemo?: undefined;
-      updateMemo?: undefined;
-      updateReply?: undefined;
-      memoId?: undefined;
-      replyId?: undefined;
-      onEditMemoIds?: undefined;
-      onEditReplyIds?: undefined;
-      setOnEditMemoIds?: undefined;
-      setOnEditReplyIds?: undefined;
-  }
-  | {
-      mode: "editMemo";
-      initialValue: string;
-      updateMemo: (id: number, content: string) => void;
-      onEditMemoIds: number[];
-      setOnEditMemoIds: React.Dispatch<React.SetStateAction<number[]>>;
+      updateContent: (id: number, content: string, type: "memo" | "reply") => void;
+      onEditId: {id: number, type: "memo" | "reply"};
+      setOnEditId: React.Dispatch<React.SetStateAction<{id: number, type: "memo" | "reply"} | null>>;
       borderStyle: boolean;
       placeholder?: undefined;
-      addMemo?: undefined;
-      addReply?: undefined;
-      updateReply?: undefined;
-      memoId: number;
-      replyId?: undefined;
+      addContent?: undefined;
+      memoId?: number;
+      replyId?: number;
       parentId?: undefined;
-      onReplyIds?: undefined;
-      setOnReplyIds?: undefined;
-      onEditReplyIds?: undefined;
-      setOnEditReplyIds?: undefined;
+      onReplyId?: undefined;
+      setOnReplyId?: undefined;
   }
-      | {
-      mode: "editReply";
-      initialValue: string;
-      updateReply: (id: number, content: string) => void;
-      onEditReplyIds: number[];
-      setOnEditReplyIds: React.Dispatch<React.SetStateAction<number[]>>;
-      borderStyle: boolean;
-      placeholder?: undefined;
-      addMemo?: undefined;
-      addReply?: undefined;
-      updateMemo?: undefined;
-      memoId?: undefined;
-      replyId: number;
-      parentId?: undefined;
-      onReplyIds?: undefined;
-      setOnReplyIds?: undefined;
-      onEditMemoIds?: undefined;
-      setOnEditMemoIds?: undefined;
-      };
-
 export default function Form({
   mode,
   initialValue,
   placeholder,
   borderStyle,
-  addMemo,
-  addReply,
-  updateMemo,
-  updateReply,
+  addContent,
+  updateContent,
   memoId,
   replyId,
   parentId,
-  onReplyIds,
-  setOnReplyIds,
-  onEditMemoIds,
-  onEditReplyIds,
-  setOnEditMemoIds,
-  setOnEditReplyIds,
+  onReplyId,
+  setOnReplyId,
+  setOnEditId,
 }: FormProps) {
   const [inputText, setInputText] = useState(initialValue);
   const buttonStyle = "w-24 bg-emerald-600 text-white cursor-pointer";
@@ -122,10 +70,15 @@ export default function Form({
           "border shadow-none": borderStyle,
         })}
         />
-        {mode === "memo" && (
+        {mode === "add" && (
           <Button
             onClick={() => {
-              addMemo?.(inputText);
+              if (parentId) {
+                addContent(inputText, parentId);
+                if (onReplyId && setOnReplyId) setOnReplyId(null);
+              } else {
+                addContent(inputText);
+              }
               setInputText("");
             }}
             className={buttonStyle}
@@ -133,48 +86,23 @@ export default function Form({
             <Send />
           </Button>
         )}
-      {mode === "reply" && (
-        <Button
-          onClick={() => {
-            addReply?.(inputText, parentId ?? 0);
-            const newOnReplyIds =
-            onReplyIds?.filter((id) => id !== parentId) ?? [];
-            setOnReplyIds?.(newOnReplyIds);
-            setInputText("");
-          }}
-          className={buttonStyle}
-        >
-          <Send />
-        </Button>
-      )}
-      {mode === "editMemo" && (
-        <Button
-          onClick={() => {
-            updateMemo?.(memoId ?? 0, inputText);
-            const newOnEditMemoIds =
-              onEditMemoIds?.filter((id) => id !== memoId) ?? [];
-            setOnEditMemoIds?.(newOnEditMemoIds);
-            setInputText("");
-          }}
-          className={buttonStyle}
-        >
-          <Send />
-        </Button>
-      )}
-      {mode === "editReply" && (
-        <Button
-        onClick={() => {
-          updateReply?.(replyId ?? 0, inputText);
-          const newOnEditReplyIds =
-            onEditReplyIds?.filter((id) => id !== replyId) ?? [];
-          setOnEditReplyIds?.(newOnEditReplyIds);
-          setInputText("");
-        }}
-        className={buttonStyle}
-        >
-          <Send />
-        </Button>
-      )}
+        {mode === "edit" && (
+          <Button
+            onClick={() => {
+              const type = memoId ? "memo" : "reply";
+              const id = memoId ?? replyId;
+              if (id) {
+                updateContent(id, inputText, type);
+              }
+              setOnEditId(null);
+              setInputText("");
+            }}
+            className={buttonStyle}
+          >
+            <Send />
+          </Button>
+        )}
+
     </div>
   );
 }

@@ -2,7 +2,8 @@ import Form from "./components/form";
 import Layout from "./components/layout";
 import MemoList from "./components/memo-list";
 import {Memo, Reply} from "./types";
-import {useState} from "react";
+// import {useState} from "react";
+import useLocalStorageState from "use-local-storage-state";
 
 const initialMemo: Memo = {
   id: Date.now(),
@@ -20,8 +21,15 @@ const initialReply: Reply = {
 };
 
 export default function App() {
-  const [memos, setMemos] = useState<Memo[]>([initialMemo]);
-  const [replys, setReplys] = useState<Reply[]>([initialReply]);
+  // const [memos, setMemos] = useState<Memo[]>([initialMemo]);
+  const [memos, setMemos] = useLocalStorageState<Memo[]>("memos", {
+    defaultValue: [initialMemo],
+  });
+  
+  // const [replys, setReplys] = useState<Reply[]>([initialReply]);
+  const [replys, setReplys] = useLocalStorageState<Reply[]>("replys", {
+    defaultValue: [initialReply],
+  });
   const borderStyle: boolean = true;
 
   const addContent = (inputText: string, parentId?: number) => {

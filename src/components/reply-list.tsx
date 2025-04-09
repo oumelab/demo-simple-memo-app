@@ -68,6 +68,7 @@ export default function ReplyList({
       </div>
       {onEditId?.type === "reply" && onEditId?.id === reply.id ? (
         <div className="mt-3 flex gap-3">
+          <div className="flex-1">
           <Form
             mode="edit"
             initialValue={reply.content}
@@ -77,6 +78,7 @@ export default function ReplyList({
             setOnEditId={setOnEditId}
             borderStyle
           />
+          </div>
           <div>
             <TooltipProvider>
               <Tooltip delayDuration={800} disableHoverableContent>
